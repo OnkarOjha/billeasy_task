@@ -63,7 +63,8 @@ A RESTful API for managing books and reviews with JWT authentication, built with
    ```
 2. Books
    -   Create Book
-        ```curl --location 'http://localhost:3000/v1/book/' \
+        ```
+        curl --location 'http://localhost:3000/v1/book/' \
          --header 'Content-Type: application/json' \
          --data '{
         "title": "The Great Gatsby",
