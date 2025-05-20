@@ -40,8 +40,23 @@ const forgotPasswordByPhoneNumber = catchAsync(async (req, res) => {
 });
 
 const login = catchAsync(async (req, res) => {
-  const { email, password } = req.body;
-  const user = await authService.loginUserWithEmailAndPassword(email, password);
+  const { email, phone, password } = req.body;
+
+  let user;
+
+  if (phone) {
+    // Login with phone number and password
+    user = await authService.loginUserWithPhoneNumber(phone, password);
+  } else if (email) {
+    // Login with email and password
+    user = await authService.loginUserWithEmailAndPassword(email, password);
+  } else {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "Either email or phone must be provided"
+    );
+  }
+
   const tokens = await tokenService.generateAuthTokens(user);
   res.send({ user, tokens });
 });
