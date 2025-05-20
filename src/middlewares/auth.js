@@ -37,13 +37,13 @@ const verifyCallback = (req, resolve, reject) => async (err, user, info) => {
     const expiresAt = moment(sessionUser.jwtAccessTokenExpiresAt);
 
     // Check if the token has expired
-    if (moment() > expiresAt) {
-      // Logout if the token has expired
-      // Perform logout logic here, e.g., invalidate the session
-      // ...
+    // if (moment() > expiresAt) {
+    //   // Logout if the token has expired
+    //   // Perform logout logic here, e.g., invalidate the session
+    //   // ...
 
-      throw new ApiError(httpStatus.UNAUTHORIZED, "Token has expired");
-    }
+    //   throw new ApiError(httpStatus.UNAUTHORIZED, "Token has expired");
+    // }
 
     // Check if the role in the token payload is "user"
     if (user.role !== dbUser.role) {
@@ -89,6 +89,7 @@ const auth = () => async (req, res, next) => {
 
     // Attach userId to the request object
     req.userId = user_id;
+    console.log("userId ", req.userId);
 
     next(); // Continue to the next middleware or route handler
   } catch (error) {

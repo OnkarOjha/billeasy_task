@@ -4,6 +4,9 @@ const config = require("./src/config/config");
 const logger = require("./src/config/logger");
 
 let server;
+
+mongoose.set("strictQuery", false);
+mongoose.set("useFindAndModify", false);
 mongoose
   .connect(config.mongoose.url, config.mongoose.options)
   .then(() => {
