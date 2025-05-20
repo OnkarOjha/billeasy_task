@@ -1,27 +1,63 @@
-Build a RESTful API using Node.js (with Express) for a basic Book Review system.
+# Book Review API
 
-🔧 Requirements:
+A RESTful API for managing books and reviews with JWT authentication, built with Node.js, Express.js, and MongoDB.
 
-1. Tech Stack:
-   Node.js with Express.js
-   Any database (e.g., MongoDB, PostgreSQL, or SQLite)
-   Use JWT for authentication
+## Table of Contents
+- [Features](#features)
+- [Technologies](#technologies)
+- [Setup](#setup)
+- [Environment Variables](#environment-variables) (included in email)
+- [API Endpoints](#api-endpoints)
+- [Database Schema](#database-schema)
 
-2. Authentication:
-   Implement JWT-based user authentication
-   Endpoints:
-   POST /signup – register a new user
-   POST /login – authenticate and return a token
+## Features
+- JWT-based authentication (signup/login)
+- CRUD operations for books
+- Review management (create, update, delete)
+- Search functionality
+- Pagination for books and reviews
+- Rating calculations
 
-3. Core Features:
-   POST /books – Add a new book (Authenticated users only)
-   GET /books – Get all books (with pagination and optional filters by author and genre)
-   GET /books/:id – Get book details by ID, including:
-   Average rating
-   Reviews (with pagination)
-   POST /books/:id/reviews – Submit a review (Authenticated users only, one review per user per book)
-   PUT /reviews/:id – Update your own review
-   DELETE /reviews/:id – Delete your own review
+## Technologies
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB
+- **Authentication**: JWT
+- **Validation**: Joi
+- **Environment Management**: dotenv
 
-4. Additional Feature:
-   GET /search – Search books by title or author (partial and case-insensitive)
+## Setup
+
+### Prerequisites
+- Node.js (v14+)
+- MongoDB
+- npm or yarn
+
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/OnkarOjha/billeasy_task.git
+   cd billeasy_task
+
+### API Endpoints
+1. Authentication
+   - Signup
+   ```bash
+      curl --location 'http://localhost:3000/v1/auth/signup' \
+      --header 'Content-Type: application/json' \
+      --data-raw '{
+        "name": "User Full Name",  
+        "email": "user@example.com",
+        "password": "securePassword123",
+        "phone": "+1234567890"  
+      }'
+      ```
+   - Login
+   ```bash
+      curl --location 'http://localhost:3000/v1/auth/login' \
+      --header 'Content-Type: application/json' \
+      --data-raw '{
+     "email": "user@example.com",
+     "password": "securePassword123"
+
+      }'
+   ```
