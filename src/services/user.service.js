@@ -9,14 +9,13 @@ const mediaService = require("./media.service");
 const fetch = require("node-fetch");
 const sharp = require("sharp");
 const cookies = require("../utils/cookies");
-const constants = require("../constants/constants");
+const constants = require("../contants/constants");
 
 /**
  * Create a user
  * @param {Object} userBody
  * @returns {Promise<User>}
  */
-
 
 const createUser = async (userBody) => {
   if (await User.isEmailTaken(userBody.email)) {
@@ -29,7 +28,7 @@ const createUser = async (userBody) => {
     email: userBody.email,
     password: userBody.password,
     phone: userBody.phone,
-   // mediaExtension: mediaExtension,
+    // mediaExtension: mediaExtension,
     is_logged_in: true,
     is_verified: false,
     no_of_devices: 1,
@@ -56,24 +55,24 @@ const createUser = async (userBody) => {
   const refreshTokenExpires = jwtTokens.refresh.expires;
 
   const expiresInMilliseconds = 3600 * 1000;
-    const expirationDate = new Date(Date.now() + expiresInMilliseconds);
+  const expirationDate = new Date(Date.now() + expiresInMilliseconds);
 
-    // set the renews at 2 minutes before expiresIn
-    const renewsAt = new Date(expirationDate);
-    renewsAt.setMinutes(renewsAt.getMinutes() - 2);
+  // set the renews at 2 minutes before expiresIn
+  const renewsAt = new Date(expirationDate);
+  renewsAt.setMinutes(renewsAt.getMinutes() - 2);
 
-    const newSession = new Session({
-      user_id: savedUser.user_id,
-      // accessToken: tokenResponse.access_token,
-      // refreshToken: tokenResponse.refresh_token,
-      renewsAt: renewsAt,
-      deviceLoggedIn: savedUser.no_of_devices,
-      socialLogin: false,
-      jwtAccessToken: accessToken,
-      jwtRefreshToken: refreshToken,
-      jwtAccessTokenExpiresAt: accessTokenExpires,
-      jwtRefreshTokenExpiresAt: refreshTokenExpires,
-    });
+  const newSession = new Session({
+    user_id: savedUser.user_id,
+    // accessToken: tokenResponse.access_token,
+    // refreshToken: tokenResponse.refresh_token,
+    renewsAt: renewsAt,
+    deviceLoggedIn: savedUser.no_of_devices,
+    socialLogin: false,
+    jwtAccessToken: accessToken,
+    jwtRefreshToken: refreshToken,
+    jwtAccessTokenExpiresAt: accessTokenExpires,
+    jwtRefreshTokenExpiresAt: refreshTokenExpires,
+  });
 
   const savedSession = await newSession.save();
   console.log(
@@ -81,8 +80,7 @@ const createUser = async (userBody) => {
     savedSession._id
   );
 
-  return {user: savedUser, jwtTokens}
-
+  return { user: savedUser, jwtTokens };
 };
 
 /**
@@ -380,7 +378,7 @@ const checkUserLogout = async (userId) => {
 };
 
 //service for user logout
-const userLogout = async (res,userId) => {
+const userLogout = async (res, userId) => {
   try {
     // check first of all if user is logged out
     const useLoginValue = await checkUserLogout(userId);
@@ -393,9 +391,8 @@ const userLogout = async (res,userId) => {
       await updateSessionTable(userId);
 
       // delete cookies
-      await cookies.deleteCookie(res,constants.ACCESS_COOKIE_NAME);
-      await cookies.deleteCookie(res,constants.REFRESH_COOKIE_NAME);
-
+      await cookies.deleteCookie(res, constants.ACCESS_COOKIE_NAME);
+      await cookies.deleteCookie(res, constants.REFRESH_COOKIE_NAME);
 
       console.log("[[User Service] User Logout] Successfull: ", userId);
 
@@ -412,25 +409,25 @@ const userLogout = async (res,userId) => {
   }
 };
 
-const isPhoneNumberTaken = async(phoneNumber) => {
-  const user = await User.findOne({phone: phoneNumber});
+const isPhoneNumberTaken = async (phoneNumber) => {
+  const user = await User.findOne({ phone: phoneNumber });
   return !!user;
 };
 
-const getUserByPhoneNumber = async(phoneNumber) => {
-  const user = await User.findOne({phone: phoneNumber});
+const getUserByPhoneNumber = async (phoneNumber) => {
+  const user = await User.findOne({ phone: phoneNumber });
   return user;
-}
+};
 
 /**
  * creating User With Phone No
  * @param {object}
  */
 
-const registerWithPhoneNo = async(payload) => {
+const registerWithPhoneNo = async (payload) => {
   try {
-    if(await isPhoneNumberTaken(payload.phone)) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Phone Number Already taken');
+    if (await isPhoneNumberTaken(payload.phone)) {
+      throw new ApiError(httpStatus.BAD_REQUEST, "Phone Number Already taken");
     }
 
     const newUser = new User({
@@ -442,73 +439,70 @@ const registerWithPhoneNo = async(payload) => {
       is_verified: false,
       no_of_devices: 1,
       last_login: new Date(),
-
     });
 
-     //return User.create(userBody);
-  const savedUser = await newUser.save();
+    //return User.create(userBody);
+    const savedUser = await newUser.save();
 
-  console.log(
-    "[[User Service] User PhoneNo SignUp] : User saved to the database:",
-    savedUser._id
-  );
-  //generate JWT
+    console.log(
+      "[[User Service] User PhoneNo SignUp] : User saved to the database:",
+      savedUser._id
+    );
+    //generate JWT
 
-  const expiresInMilliseconds = 3600 * 1000;
+    const expiresInMilliseconds = 3600 * 1000;
     const expirationDate = new Date(Date.now() + expiresInMilliseconds);
 
     // set the renews at 2 minutes before expiresIn
     const renewsAt = new Date(expirationDate);
     renewsAt.setMinutes(renewsAt.getMinutes() - 2);
 
-  const jwtTokens = await tokenService.generateAuthTokens(newUser);
+    const jwtTokens = await tokenService.generateAuthTokens(newUser);
 
-  // Access Token
-  const accessToken = jwtTokens.access.token;
-  const accessTokenExpires = jwtTokens.access.expires;
+    // Access Token
+    const accessToken = jwtTokens.access.token;
+    const accessTokenExpires = jwtTokens.access.expires;
 
-  // Refresh Token
-  const refreshToken = jwtTokens.refresh.token;
-  const refreshTokenExpires = jwtTokens.refresh.expires;
+    // Refresh Token
+    const refreshToken = jwtTokens.refresh.token;
+    const refreshTokenExpires = jwtTokens.refresh.expires;
 
-  // const newSession = new Session({
-  //   user_id: savedUser._id,
-  //   renewsAt: new Date(),
-  //   deviceLoggedIn: savedUser.no_of_devices,
-  //   socialLogin: false,
-  //   jwtAccessToken: accessToken,
-  //   jwtRefreshToken: refreshToken,
-  //   jwtAccessTokenExpiresAt: accessTokenExpires,
-  //   jwtRefreshTokenExpiresAt: refreshTokenExpires,
+    // const newSession = new Session({
+    //   user_id: savedUser._id,
+    //   renewsAt: new Date(),
+    //   deviceLoggedIn: savedUser.no_of_devices,
+    //   socialLogin: false,
+    //   jwtAccessToken: accessToken,
+    //   jwtRefreshToken: refreshToken,
+    //   jwtAccessTokenExpiresAt: accessTokenExpires,
+    //   jwtRefreshTokenExpiresAt: refreshTokenExpires,
 
-  // });
+    // });
 
-  const newSession = new Session({
-    user_id: savedUser.user_id,
-    // accessToken: tokenResponse.access_token,
-    // refreshToken: tokenResponse.refresh_token,
-    renewsAt: renewsAt,
-    deviceLoggedIn: savedUser.no_of_devices,
-    socialLogin: false,
-    jwtAccessToken: accessToken,
-    jwtRefreshToken: refreshToken,
-    jwtAccessTokenExpiresAt: accessTokenExpires,
-    jwtRefreshTokenExpiresAt: refreshTokenExpires,
-  });
+    const newSession = new Session({
+      user_id: savedUser.user_id,
+      // accessToken: tokenResponse.access_token,
+      // refreshToken: tokenResponse.refresh_token,
+      renewsAt: renewsAt,
+      deviceLoggedIn: savedUser.no_of_devices,
+      socialLogin: false,
+      jwtAccessToken: accessToken,
+      jwtRefreshToken: refreshToken,
+      jwtAccessTokenExpiresAt: accessTokenExpires,
+      jwtRefreshTokenExpiresAt: refreshTokenExpires,
+    });
 
-  const savedSession = await newSession.save();
-  console.log(
-    "[[User Service] User PhoneNumber Signup] : Session successfully created and saved to the database:",
-    savedSession._id
-  );
+    const savedSession = await newSession.save();
+    console.log(
+      "[[User Service] User PhoneNumber Signup] : Session successfully created and saved to the database:",
+      savedSession._id
+    );
 
-  return {user: savedUser, jwtTokens};
-    
+    return { user: savedUser, jwtTokens };
   } catch (error) {
     console.error(error);
   }
-
-}
+};
 
 const userVerification = async (
   req,
@@ -691,5 +685,5 @@ module.exports = {
   registerWithPhoneNo,
   userVerification,
   userDashboard,
-  getUserByPhoneNumber
+  getUserByPhoneNumber,
 };

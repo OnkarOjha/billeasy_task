@@ -7,14 +7,14 @@ const compression = require("compression");
 const cors = require("cors");
 const passport = require("passport");
 const httpStatus = require("http-status");
-const config = require("./config/config");
-const morgan = require("./config/morgan");
-const { jwtStrategy } = require("./config/passport");
-const { authLimiter } = require("./middlewares/rateLimiter");
-const routes = require("./routes/v1");
-const { errorConverter, errorHandler } = require("./middlewares/error");
+const config = require("./src/config/config");
+const morgan = require("./src/config/morgan");
+const { jwtStrategy } = require("./src/config/passport");
+const { authLimiter } = require("./src/middlewares/rateLimiter");
+const routes = require("./src/routes/v1");
+const { errorConverter, errorHandler } = require("./src/middlewares/error");
 const cookieParser = require("cookie-parser");
-const ApiError = require("./utils/ApiError");
+const ApiError = require("./src/utils/ApiError");
 
 const app = express();
 

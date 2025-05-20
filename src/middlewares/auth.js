@@ -3,7 +3,7 @@ const httpStatus = require("http-status");
 const ApiError = require("../utils/ApiError");
 const jwt = require("jsonwebtoken");
 const moment = require("moment");
-const constants = require("../constants/constants");
+const constants = require("../contants/constants");
 const User = require("../models/user.model");
 const Session = require("../models/session.model");
 

@@ -4,7 +4,7 @@ const userService = require("./user.service");
 const Token = require("../models/session.model");
 const ApiError = require("../utils/ApiError");
 const { tokenTypes } = require("../config/tokens");
-const constants = require("../constants/constants");
+const constants = require("../contants/constants");
 const User = require("../models/user.model");
 const moment = require("moment");
 require("dotenv").config();

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const app = require("./app");
-const config = require("./config/config");
-const logger = require("./config/logger");
+const config = require("./src/config/config");
+const logger = require("./src/config/logger");
 
 let server;
 mongoose
@@ -15,11 +15,6 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
-
-// server = app.listen(config.port, () => {
-//   console.log("server listening");
-//   logger.info(`Listening to port ${config.port}`);
-// });
 
 const exitHandler = () => {
   if (server) {
